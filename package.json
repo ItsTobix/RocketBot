@@ -1,0 +1,24 @@
+{
+  "name": "rocketbot",
+  "version": "0.0.0",
+  "scripts": {
+    "start": "node main.js",
+    "test": "node main.js debug"
+  },
+  "dependencies": {
+    "discord.js": "^11.3.2"
+  },
+  "main": "main.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ItsTobix/RocketBot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ItsTobix/RocketBot/issues"
+  },
+  "homepage": "https://github.com/ItsTobix/RocketBot#readme",
+  "description": ""
+}

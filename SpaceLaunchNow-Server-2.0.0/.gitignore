@@ -1,0 +1,16 @@
+*.pyc
+*.iml
+django_logs/**
+env/**
+venv/**
+db.sqlite3
+.idea/**
+django.log
+celery.log
+celerybeat-schedule
+bot/utils/config.py
+celerybeat.pid
+*.log
+venv/**
+spacelaunchnow/config.py
+assets/**

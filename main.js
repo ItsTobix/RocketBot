@@ -20,7 +20,9 @@ var cmdmap = {
 
 
 function cmd_say(msg, args) {
+
     msg.channel.send(args.join(' '))
+
 }
 
 
@@ -44,25 +46,24 @@ client.on('message', (msg) => {
 
     if (invoke in cmdmap) {
         cmdmap[invoke](msg, args)
+
+
     }
 }
 
 })
 
+//Welcome Message
 
 client.on('guildMemberAdd', member => {
-
-    const channel = member.guild.channels.find('willkommen', 'member-log');
+    // Send the message to a designated channel on a server:
+    const channel = member.guild.channels.find('name', 'willkommen');
 
 if (!channel) return;
 
-channel.send(`Welcome to the server, ${member}`);
+channel.send(`Housten we have a Problem, ${member} joined!`);
 });
 
 
-
-
-
-client.login(config.token);
 
 

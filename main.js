@@ -1,47 +1,112 @@
+
+//Imoprts
 const Discord = require('discord.js');
 const fs      = require('fs');
-var xp      = require("./xp.json")
+const config = JSON.parse(fs.readFileSync('config.json', 'utf8'))
+const token  = JSON.parse(fs.readFileSync("token.json","utf8"))
+const Embed = require("./commands/embed.js")
 
-const config = JSON.parse(fs.readFileSync('config.json', 'utf8'));
-
-var bot = new Discord.Client();
-
-
+var bot = new Discord.Client()
 
 
-bot.on('ready', () => {
-    console.log(`Logged in as ${bot.user.username}...`)
-    bot.user.setActivity("Prepare for a launch!");
 
-});
+
+var xp = JSON.parse(fs.readFileSync("xp.json", "utf8"));
+
+
 
 var cmdmap = {
     say: cmd_say,
-    test: cmd_test
-};
+    test: cmd_test,
+    xp: cmd_xp
 
-function cmd_say(message, args) {
-    message.channel.send(args.join(' '))
 }
 
-function cmd_test(message, args) {
+
+function cmd_say(msg, args) {
+    msg.channel.send(args.join(' '))
+}
+
+function cmd_test(msg, args) {
     console.log("test")
 }
 
 
-bot.on("message", async message => {
-
-    if(message.author.bot) return;
-    if(message.channel.type === "dm") return;{
-
-
-    var cmd = message.content.split(' ')[0].substr(config.prefix.length),
-        args   = message.content.split(' ').slice(1)
-
-    if (cmd in cmdmap) {
-        cmdmap[cmd](message, args)
-    }
+function cmd_xp(msg) {
+    Embed.xpCount(msg.channel,"",`DEIN SCORE IST: ${xp[msg.member.id].messageSent}`)
 }
+
+
+
+
+
+
+bot.on('message', (msg) => {
+
+
+
+    var  content = msg.content,
+         author  = msg.member,
+         chan    = msg.channel,
+         guild   = msg.guild
+
+    if (author.id != bot.user.id && content.startsWith(config.prefix)) {
+
+        var invoke = content.split(' ')[0].substr(config.prefix.length),
+        args   = content.split(' ').slice(1)
+
+        if (invoke in cmdmap) {
+        cmdmap[invoke](msg, args)
+        }
+    };
+
+
+
+// Level System
+
+
+
+
+    if(!xp[author.id]) xp[author.id] ={
+        messageSent:0
+
+    }
+
+    xp[author.id].messageSent++;
+
+
+    fs.writeFile("xp.json", JSON.stringify(xp), (err) => {
+        if (err) console.error(err);
+
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 });
@@ -49,7 +114,7 @@ bot.on("message", async message => {
 //Welcome Message
 
 bot.on('guildMemberAdd', member => {
-    // Send the message to a designated channel on a server:
+
     const channel = member.guild.channels.find('name', 'willkommen');
 
 if (!channel) return;
@@ -59,35 +124,9 @@ channel.send(`Housten we have a Problem, ${member} joined!`);
 
 
 
-let xpAdd = Math.floor(Math.random() * 7) + 8;
-console.log(xpAdd);
-
-if(!xp[message.author.id]){
-    xp[message.author.id] = {
-        xp: 0,
-        level: 1
-    };
-}
-
-
-let curxp = xp[message.author.id].xp;
-let curlvl = xp[message.author.id].level;
-let nxtLvl = xp[message.author.id].level * 300;
-xp[message.author.id].xp =  curxp + xpAdd;
-if(nxtLvl <= xp[message.author.id].xp){
-    xp[message.author.id].level = curlvl + 1;
-    let lvlup = new Discord.RichEmbed()
-        .setTitle("Level Up!")
-        .setColor(purple)
-        .addField("New Level", curlvl + 1);
-
-    message.channel.send(lvlup).then(msg => {msg.delete(5000)});
-}
-fs.writeFile("./xp.json", JSON.stringify(xp), (err) => {
-    if(err) console.log(err)
-});
-
-
+bot.on('ready', () => {
+    console.log(`Logged in as ${bot.user.username}...`)
+})
 
 
 bot.login(token.token);
